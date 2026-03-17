@@ -38,3 +38,18 @@ docker stop <c>        # SIGTERM → SIGKILL
 | Build | `docker build` | Image not created |
 | Init | `docker run` | Container won't start |
 | Run | PID 1 starts | Container exits |
+
+### Container States
+`docker stop` does not end the lifecycle — the container moves to `exited` and can be restarted. Only `docker rm` permanently ends it.
+
+| State | Description |
+|---|---|
+| `created` | Initialized but not started (`docker create`) |
+| `running` | PID 1 is active |
+| `paused` | Processes frozen (`docker pause`) |
+| `exited` | PID 1 exited or `docker stop` called — writable layer preserved |
+| `dead` | Failed to stop cleanly |
+| `removing` | `docker rm` in progress |
+
+- `docker start <container>` — moves from `exited` back to `running` (skips build and init)
+- `docker rm <container>` — permanently deletes the container and its writable layer
